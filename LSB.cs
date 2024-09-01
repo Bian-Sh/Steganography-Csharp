@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * copyright reserved
  * https://www.github.com/bian-sh
  * MIT license
@@ -13,29 +13,29 @@ using static Steganography.DataProcessHandler;
 namespace Steganography
 {
     /// <summary>
-    /// Ìá¹©Ê¹ÓÃ×îµÍÓĞĞ§Î»£¨LSB£©ÒşĞ´Êõ¼¼Êõ±àÂëºÍ½âÂëÊı¾İµÄ·½·¨¡£
+    /// æä¾›ä½¿ç”¨æœ€ä½æœ‰æ•ˆä½ï¼ˆLSBï¼‰éšå†™æœ¯æŠ€æœ¯ç¼–ç å’Œè§£ç æ•°æ®çš„æ–¹æ³•ã€‚
     /// </summary>
     public static class LSB
     {
         const int HEADER_SIZE = 135;
         /// <summary>
-        /// ´ÓÎ»Í¼Í¼ÏñÖĞ¶ÁÈ¡´ÓÖ¸¶¨Æ«ÒÆÁ¿¿ªÊ¼µÄÊı¾İ¡£
+        /// ä»ä½å›¾å›¾åƒä¸­è¯»å–ä»æŒ‡å®šåç§»é‡å¼€å§‹çš„æ•°æ®ã€‚
         /// </summary>
-        /// <param name="bitmap">Òª¶ÁÈ¡µÄÎ»Í¼Í¼Ïñ¡£</param>
-        /// <param name="offset">ÒÔÏñËØÎªµ¥Î»µÄÆğÊ¼Æ«ÒÆÁ¿¡£</param>
-        /// <param name="size">Òª¶ÁÈ¡µÄÊı¾İ´óĞ¡£¨ÒÔ×Ö½ÚÎªµ¥Î»£©¡£</param>
-        /// <returns>ÌáÈ¡µÄÊı¾İ×Ö½ÚÊı×é¡£</returns>
-        /// <exception cref="Exception">¶ÁÈ¡Î»Í¼Êı¾İÊ±·¢Éú´íÎóÊ±Å×³ö¡£</exception>
+        /// <param name="bitmap">è¦è¯»å–çš„ä½å›¾å›¾åƒã€‚</param>
+        /// <param name="offset">ä»¥åƒç´ ä¸ºå•ä½çš„èµ·å§‹åç§»é‡ã€‚</param>
+        /// <param name="size">è¦è¯»å–çš„æ•°æ®å¤§å°ï¼ˆä»¥å­—èŠ‚ä¸ºå•ä½ï¼‰ã€‚</param>
+        /// <returns>æå–çš„æ•°æ®å­—èŠ‚æ•°ç»„ã€‚</returns>
+        /// <exception cref="Exception">è¯»å–ä½å›¾æ•°æ®æ—¶å‘ç”Ÿé”™è¯¯æ—¶æŠ›å‡ºã€‚</exception>
         private static byte[] Read(Bitmap bitmap, int offset, int size)
         {
-            int bitCount = size * 8; // ×Ü¹²Òª¶ÁÈ¡µÄÎ»Êı
-            int pixelCount = (int)Math.Ceiling(bitCount / 3.0); // Ã¿¸öÏñËØÌá¹©3¸öÎ»
+            int bitCount = size * 8; // æ€»å…±è¦è¯»å–çš„ä½æ•°
+            int pixelCount = (int)Math.Ceiling(bitCount / 3.0); // æ¯ä¸ªåƒç´ æä¾›3ä¸ªä½
             var height = bitmap.Height;
             var width = bitmap.Width;
             var capacity = height * width;
             if (offset + pixelCount > capacity)
             {
-                throw new DataTooLargeException("Êı¾İ¹ı´ó");
+                throw new DataTooLargeException("æ•°æ®è¿‡å¤§");
             }
 
             byte[] data = new byte[size];
@@ -47,7 +47,7 @@ namespace Steganography
                 var y = i / width;
                 Color color = bitmap.GetPixel(x, y);
 
-                // ´ÓÃ¿¸öÑÕÉ«Í¨µÀÖĞÌáÈ¡×îµÍÓĞĞ§Î»
+                // ä»æ¯ä¸ªé¢œè‰²é€šé“ä¸­æå–æœ€ä½æœ‰æ•ˆä½
                 byte[] rgb = { color.R, color.G, color.B };
                 for (int j = 0; j < 3 && bitIndex < bitCount; j++)
                 {
@@ -62,21 +62,21 @@ namespace Steganography
         }
 
         /// <summary>
-        /// ´ÓÖ¸¶¨Æ«ÒÆÁ¿¿ªÊ¼½«Êı¾İĞ´ÈëÎ»Í¼Í¼Ïñ¡£
+        /// ä»æŒ‡å®šåç§»é‡å¼€å§‹å°†æ•°æ®å†™å…¥ä½å›¾å›¾åƒã€‚
         /// </summary>
-        /// <param name="bitmap">ÒªĞ´ÈëµÄÎ»Í¼Í¼Ïñ¡£</param>
-        /// <param name="offset">ÒÔÏñËØÎªµ¥Î»µÄÆğÊ¼Æ«ÒÆÁ¿¡£</param>
-        /// <param name="data">ÒªĞ´ÈëµÄ×Ö½ÚÊı×éÊı¾İ¡£</param>
-        /// <exception cref="Exception">Ğ´ÈëÎ»Í¼Êı¾İÊ±·¢Éú´íÎóÊ±Å×³ö¡£</exception>
+        /// <param name="bitmap">è¦å†™å…¥çš„ä½å›¾å›¾åƒã€‚</param>
+        /// <param name="offset">ä»¥åƒç´ ä¸ºå•ä½çš„èµ·å§‹åç§»é‡ã€‚</param>
+        /// <param name="data">è¦å†™å…¥çš„å­—èŠ‚æ•°ç»„æ•°æ®ã€‚</param>
+        /// <exception cref="Exception">å†™å…¥ä½å›¾æ•°æ®æ—¶å‘ç”Ÿé”™è¯¯æ—¶æŠ›å‡ºã€‚</exception>
         private static void Write(Bitmap bitmap, int offset, byte[] data)
         {
-            int bitCount = data.Length * 8; // ×Ü¹²ÒªĞ´ÈëµÄÎ»Êı
-            int pixelCount = (int)Math.Ceiling(bitCount / 3.0); // Ã¿¸öÏñËØÌá¹©3¸öÎ»
+            int bitCount = data.Length * 8; // æ€»å…±è¦å†™å…¥çš„ä½æ•°
+            int pixelCount = (int)Math.Ceiling(bitCount / 3.0); // æ¯ä¸ªåƒç´ æä¾›3ä¸ªä½
             var height = bitmap.Height;
             var width = bitmap.Width;
             if (offset + pixelCount > height * width)
             {
-                throw new FileTooLargeException("Êı¾İ¹ı´ó");
+                throw new FileTooLargeException("æ•°æ®è¿‡å¤§");
             }
 
             int bitIndex = 0;
@@ -87,7 +87,7 @@ namespace Steganography
                 var y = i / width;
                 Color color = bitmap.GetPixel(x, y);
 
-                // ĞŞ¸ÄÃ¿¸öÑÕÉ«Í¨µÀµÄ×îµÍÓĞĞ§Î»
+                // ä¿®æ”¹æ¯ä¸ªé¢œè‰²é€šé“çš„æœ€ä½æœ‰æ•ˆä½
                 byte[] rgb = { color.R, color.G, color.B };
                 for (int j = 0; j < 3 && bitIndex < bitCount; j++)
                 {
@@ -95,43 +95,43 @@ namespace Steganography
                     int bitPosition = bitIndex % 8;
                     byte bit = (byte)((data[byteIndex] >> bitPosition) & 1);
 
-                    // ÉèÖÃÑÕÉ«Í¨µÀµÄ×îµÍÓĞĞ§Î»
+                    // è®¾ç½®é¢œè‰²é€šé“çš„æœ€ä½æœ‰æ•ˆä½
                     rgb[j] = (byte)((rgb[j] & ~1) | bit);
                     bitIndex++;
                 }
 
-                // Ê¹ÓÃĞŞ¸ÄºóµÄRGBÖµ¸üĞÂÏñËØ
+                // ä½¿ç”¨ä¿®æ”¹åçš„RGBå€¼æ›´æ–°åƒç´ 
                 bitmap.SetPixel(x, y, Color.FromArgb(rgb[0], rgb[1], rgb[2]));
             }
         }
 
         /// <summary>
-        /// Ê¹ÓÃÖ¸¶¨µÄÃÜÂë½«Êı¾İ±àÂëµ½Î»Í¼Í¼ÏñÖĞ¡£
+        /// ä½¿ç”¨æŒ‡å®šçš„å¯†ç å°†æ•°æ®ç¼–ç åˆ°ä½å›¾å›¾åƒä¸­ã€‚
         /// </summary>
-        /// <param name="bitmap">Òª±àÂëÊı¾İµÄÎ»Í¼Í¼Ïñ¡£</param>
-        /// <param name="data">Òª±àÂëµÄ×Ö½ÚÊı×éÊı¾İ¡£</param>
-        /// <param name="password">ÓÃÓÚ¼ÓÃÜµÄÃÜÂë¡£</param>
-        /// <exception cref="Exception">½«Êı¾İ±àÂëµ½Î»Í¼Ê±·¢Éú´íÎóÊ±Å×³ö¡£</exception>
+        /// <param name="bitmap">è¦ç¼–ç æ•°æ®çš„ä½å›¾å›¾åƒã€‚</param>
+        /// <param name="data">è¦ç¼–ç çš„å­—èŠ‚æ•°ç»„æ•°æ®ã€‚</param>
+        /// <param name="password">ç”¨äºåŠ å¯†çš„å¯†ç ã€‚</param>
+        /// <exception cref="Exception">å°†æ•°æ®ç¼–ç åˆ°ä½å›¾æ—¶å‘ç”Ÿé”™è¯¯æ—¶æŠ›å‡ºã€‚</exception>
         public static void Encode(Bitmap bitmap, byte[] data, string password)
         {
-            // Êı¾İÔ¤´¦Àí£ºÑ¹Ëõ£¬¼ÓÃÜ£¬Ìí¼Ó ÏûÏ¢Í·
-            // 1. Ñ¹Ëõ
+            // æ•°æ®é¢„å¤„ç†ï¼šå‹ç¼©ï¼ŒåŠ å¯†ï¼Œæ·»åŠ  æ¶ˆæ¯å¤´
+            // 1. å‹ç¼©
             var compressedData = CompressData(data);
             // todo show size in the UI
-            // 2. ¼ÓÃÜ
+            // 2. åŠ å¯†
             var encryptedData = EncryptData(compressedData, password);
             // todo show size in the UI
-            // 3. Ìí¼ÓÏûÏ¢Í·
+            // 3. æ·»åŠ æ¶ˆæ¯å¤´
             var finaldata = WriteHeaderInfo(encryptedData);
             // todo show size in the UI
             Write(bitmap, 0, finaldata);
         }
 
         /// <summary>
-        /// »ñÈ¡Î»Í¼Í¼ÏñÖĞ±àÂëÊı¾İµÄ´óĞ¡¡£
+        /// è·å–ä½å›¾å›¾åƒä¸­ç¼–ç æ•°æ®çš„å¤§å°ã€‚
         /// </summary>
-        /// <param name="bitmap">Òª¼ì²éµÄÎ»Í¼Í¼Ïñ¡£</param>
-        /// <returns>±àÂëÊı¾İµÄ´óĞ¡£¨ÒÔ×Ö½ÚÎªµ¥Î»£©¡£</returns>
+        /// <param name="bitmap">è¦æ£€æŸ¥çš„ä½å›¾å›¾åƒã€‚</param>
+        /// <returns>ç¼–ç æ•°æ®çš„å¤§å°ï¼ˆä»¥å­—èŠ‚ä¸ºå•ä½ï¼‰ã€‚</returns>
         public static int GetEncodedDataSize(Bitmap bitmap)
         {
             try
@@ -154,7 +154,7 @@ namespace Steganography
             var datasize = GetEncodedDataSize(bitmap);
             if (datasize == 0)
             {
-                throw new DataNotFoundException("Ã»ÓĞÕÒµ½Òş²ØµÄÊı¾İ");
+                throw new DataNotFoundException("æ²¡æœ‰æ‰¾åˆ°éšè—çš„æ•°æ®");
             }
             var offset = (int)Math.Ceiling(HEADER_SIZE * 8 / 3.0);
             var encryptedDataWithSalt = Read(bitmap, offset, datasize);
